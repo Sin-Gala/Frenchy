@@ -36,9 +36,7 @@ expression
 multOp: '*' | '/' | '%';
 addOp: '+' | '-';
 compareOp: '==' | '!=' | '>' | '<' | '>=' | '<=';
-boolOp: BOOL_OPERATOR;
-
-BOOL_OPERATOR: 'et' | 'ou' | 'et/ou';
+boolOp: 'et' | 'ou' | 'et/ou';
 
 constant: INTEGER | FLOAT | STRING | BOOL | NULL;
 INTEGER: [0-9]+;

@@ -11,6 +11,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
     public FrenchyVisitor()
     {
         // Set const functions and variables
+        Constants["Pi"] = 3.14f;
         Constants["MsgConsole"] = new Func<object?[], object?>(MsgConsole);
     }
     #endregion
@@ -22,6 +23,9 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
     {
         var varName = context.IDENTIFIER().GetText();
         var value = Visit(context.expression());
+
+        if (Constants.ContainsKey(varName))
+            throw new Exception($"The variable {varName} already exists as a constant");
 
         Variables[varName] = value;
 
@@ -51,10 +55,8 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
     {
         var varName = context.IDENTIFIER().GetText();
 
-        if (!Variables.ContainsKey(varName))
-        {
-            throw new Exception($"Variable {varName} is not defined");
-        }
+        if (!Variables.ContainsKey(varName) && !Constants.ContainsKey(varName))
+            throw new Exception($"La variable {varName} n'est pas définie");
 
         return Variables[varName];
     }
@@ -65,10 +67,10 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         var args = context.expression().Select(Visit).ToArray();
 
         if (!Constants.ContainsKey(name))
-            throw new Exception($"Function {name} is not defined");
+            throw new Exception($"La fonction {name} n'est pas définie");
 
         if (Constants[name] is not Func<object?[], object?> func)
-            throw new Exception($"Variable {name} is not a function");
+            throw new Exception($"La variable {name} n'est pas une fonction");
 
         return func(args);
     }
@@ -164,7 +166,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (left is string || right is string)
             return $"{left}{right}";
 
-        throw new Exception($"Cannot add values of typs {left?.GetType()} and {right?.GetType()}!");
+        throw new Exception($"Impossible de calculer des valeurs de types {left?.GetType()} et {right?.GetType()}!");
     }
 
     private object? Substract(object? left, object? right)
@@ -181,7 +183,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (left is float lFloat && right is int rInt)
             return lFloat - rInt;
 
-        throw new Exception($"Cannot remove values of typs {left?.GetType()} and {right?.GetType()}!");
+        throw new Exception($"Impossible de calculer des valeurs de types {left?.GetType()} et {right?.GetType()}!");
     }
 
     private object? Multiply(object? left, object? right)
@@ -198,7 +200,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (left is float lFloat && right is int rInt)
             return lFloat * rInt;
 
-        throw new Exception($"Cannot multiply values of typs {left?.GetType()} and {right?.GetType()}!");
+        throw new Exception($"Impossible de calculer des valeurs de types {left?.GetType()} et {right?.GetType()}!");
     }
 
     private object? Divide(object? left, object? right)
@@ -215,7 +217,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (left is float lFloat && right is int rInt)
             return lFloat / rInt;
 
-        throw new Exception($"Cannot divide values of typs {left?.GetType()} and {right?.GetType()}!");
+        throw new Exception($"Impossible de calculer des valeurs de types {left?.GetType()} et {right?.GetType()}!");
     }
 
     private object? Modulo(object? left, object? right)
@@ -232,7 +234,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (left is float lFloat && right is int rInt)
             return lFloat % rInt;
 
-        throw new Exception($"Cannot modulo values of typs {left?.GetType()} and {right?.GetType()}!");
+        throw new Exception($"Impossible de calculer des valeurs de types {left?.GetType()} et {right?.GetType()}!");
     }
     #endregion
 
@@ -341,7 +343,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (value is bool b)
             return b;
 
-        throw new Exception("Value is not a boolean");
+        throw new Exception("Valeur retournée n'est pas un boolean");
     }
 
     public bool IsFalse(object? value) => !IsTrue(value);
