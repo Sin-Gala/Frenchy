@@ -17,6 +17,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
     #endregion
     private Dictionary<string, object?> Variables { get; } = new();
     private Dictionary<string, object?> Constants { get; } = new();
+    private Dictionary<string, object?> Temps { get; } = new();
 
     #region VISIT OVERRIDES
     public override object? VisitAssignment(FrenchyParser.AssignmentContext context)
@@ -30,6 +31,18 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         Variables[varName] = value;
 
         return null;
+    }
+    public override object? VisitAssignmentTemp(FrenchyParser.AssignmentTempContext context)
+    {
+        var tempVarName = context.IDENTIFIER().GetText();
+        var tempValue = Visit(context.expression());
+
+        if ((tempValue is int || tempValue is float) && !Temps.ContainsKey(tempVarName))
+            Temps[tempVarName] = tempValue;
+        else if (tempValue is not int && tempValue is not float)
+            throw new Exception($"Variable {tempVarName} n'est pas un int ou un float!");
+
+        return tempVarName;
     }
 
     public override object? VisitConstant(FrenchyParser.ConstantContext context)
@@ -55,10 +68,14 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
     {
         var varName = context.IDENTIFIER().GetText();
 
-        if (!Variables.ContainsKey(varName) && !Constants.ContainsKey(varName))
-            throw new Exception($"La variable {varName} n'est pas définie");
+        if (Variables.ContainsKey(varName))
+            return Variables[varName];
+        else if (Constants.ContainsKey(varName))
+            return Constants[varName];
+        else if (Temps.ContainsKey(varName))
+            return Temps[varName];
 
-        return Variables[varName];
+        throw new Exception($"La variable {varName} n'est pas définie");
     }
 
     public override object? VisitFunctionCall(FrenchyParser.FunctionCallContext context)
@@ -95,6 +112,25 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
             Visit(context.block());
         else
             Visit(context.elseIfBlock());
+
+        return null;
+    }
+
+    public override object? VisitForBlock(FrenchyParser.ForBlockContext context)
+    {
+        var tempVarName = Visit(context.assignmentTemp()).ToString();
+
+        if (IsFalse(Visit(context.expression(0))))
+        {
+            do
+            {
+                //Visit(context.block());
+                Visit(context.expression(1));
+            }
+            while (IsFalse(Visit(context.expression(0))));
+        }
+
+        Temps.Remove(tempVarName);
 
         return null;
     }

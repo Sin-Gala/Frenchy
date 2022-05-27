@@ -23,3 +23,9 @@ sinon
 j => i + 1;
 
 MsgConsole("i is " + i);
+
+pour (h => 0, h > 5, h => h + 1)
+{
+	r => 132;
+	MsgConsole("h = " + h);
+}

@@ -14,11 +14,12 @@ whileBlock: WHILE '('expression')' block;
 
 WHILE: 'pendant que' | 'jusque';
 
-forBlock: 'pour ('expression')' block;
+forBlock: 'pour ('assignmentTemp ',' expression ',' expression ')' block;
 
 foreachBlock: 'pour chaque ('IDENTIFIER ',' STRING ', dans' constant ')';
 
 assignment: IDENTIFIER '=>' expression;
+assignmentTemp: IDENTIFIER '=>' expression;
 
 functionCall: IDENTIFIER '(' (expression (',' expression)*)? ')';
 
