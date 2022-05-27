@@ -6,13 +6,13 @@ line: statement | ifBlock | whileBlock | forBlock | foreachBlock;
 
 statement: (assignment|functionCall) ';';
 
-ifBlock: 'si ('expression')' block ('autrement' elseIfBlock)?;
+ifBlock: 'si ('expression')' block ('sinon' elseIfBlock)?;
 
 elseIfBlock: block | ifBlock; 
 
 whileBlock: WHILE '('expression')' block; 
 
-WHILE: 'pendant' | 'jusque';
+WHILE: 'pendant que' | 'jusque';
 
 forBlock: 'pour ('expression')' block;
 

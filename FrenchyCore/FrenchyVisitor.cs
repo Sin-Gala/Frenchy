@@ -1,4 +1,5 @@
-﻿using Frenchy.FrenchyCore;
+﻿using Antlr4.Runtime.Misc;
+using Frenchy.FrenchyCore;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -71,6 +72,30 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
 
         return func(args);
     }
+    public override object? VisitWhileBlock(FrenchyParser.WhileBlockContext context)
+    {
+        Func<object?, bool> condition = context.WHILE().GetText() == "pendant que" ? IsTrue : IsFalse;
+
+        if (condition(Visit(context.expression())))
+        {
+            do
+            {
+                Visit(context.block());
+            }
+            while (condition(Visit(context.expression())));
+        }
+
+        return null;
+    }
+    public override object? VisitIfBlock(FrenchyParser.IfBlockContext context)
+    {
+        if (IsTrue(Visit(context.expression())))
+            Visit(context.block());
+        else
+            Visit(context.elseIfBlock());
+
+        return null;
+    }
 
     public override object? VisitAdditiveExpression(FrenchyParser.AdditiveExpressionContext context)
     {
@@ -86,7 +111,6 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
             _ => throw new NotImplementedException()
         };
     }
-
     public override object? VisitMultiplicativeExpression(FrenchyParser.MultiplicativeExpressionContext context)
     {
         var left = Visit(context.expression(0));
@@ -102,23 +126,6 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
             _ => throw new NotImplementedException()
         };
     }
-
-    public override object? VisitWhileBlock(FrenchyParser.WhileBlockContext context)
-    {
-        Func<object?, bool> condition = context.WHILE().GetText() == "while" ? IsTrue : IsFalse;
-
-        if (condition(Visit(context.expression())))
-        {
-            do
-            {
-                Visit(context.block());
-            }
-            while (condition(Visit(context.expression())));
-        }
-
-        return null;
-    }
-
     public override object? VisitComparisonExpression(FrenchyParser.ComparisonExpressionContext context)
     {
         var left = Visit(context.expression(0));
@@ -244,7 +251,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (left is float lFloat && right is int rInt)
             return lFloat < rInt;
 
-        throw new Exception($"Cannot compare values of typs {left?.GetType()} and {right?.GetType()}!");
+        throw new Exception($"Impossible de comparer des objets de type {left?.GetType()} et {right?.GetType()}!");
     }
     private bool GreaterThan(object? left, object? right)
     {
@@ -260,7 +267,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (left is float lFloat && right is int rInt)
             return lFloat > rInt;
 
-        throw new Exception($"Cannot compare values of typs {left?.GetType()} and {right?.GetType()}!");
+        throw new Exception($"Impossible de comparer des objets de type {left?.GetType()} et {right?.GetType()}!");
     }
     private bool IsEquals(object? left, object? right)
     {
@@ -276,7 +283,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (left is float lFloat && right is int rInt)
             return lFloat == rInt;
 
-        throw new Exception($"Cannot compare values of typs {left?.GetType()} and {right?.GetType()}!");
+        throw new Exception($"Impossible de comparer des objets de type {left?.GetType()} et {right?.GetType()}!");
     }
     private bool NotEquals(object? left, object? right)
     {
@@ -292,7 +299,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (left is float lFloat && right is int rInt)
             return lFloat != rInt;
 
-        throw new Exception($"Cannot compare values of typs {left?.GetType()} and {right?.GetType()}!");
+        throw new Exception($"Impossible de comparer des objets de type {left?.GetType()} et {right?.GetType()}!");
     }
     private bool GreaterThanOrEqual(object? left, object? right)
     {
@@ -308,7 +315,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (left is float lFloat && right is int rInt)
             return lFloat >= rInt;
 
-        throw new Exception($"Cannot compare values of typs {left?.GetType()} and {right?.GetType()}!");
+        throw new Exception($"Impossible de comparer des objets de type {left?.GetType()} et {right?.GetType()}!");
     }
     private bool LessThanOrEqual(object? left, object? right)
     {
@@ -324,7 +331,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (left is float lFloat && right is int rInt)
             return lFloat <= rInt;
 
-        throw new Exception($"Cannot compare values of typs {left?.GetType()} and {right?.GetType()}!");
+        throw new Exception($"Impossible de comparer des objets de type {left?.GetType()} et {right?.GetType()}!");
     }
     #endregion
 

@@ -3,17 +3,23 @@ i => 1;
 b => vrai;
 s => "John";
 
+a => 1;
+
+pendant que (a < 8)
+{
+	a => a + 3;
+	MsgConsole("a = " + a);
+}
+
 si (i < 8)
 {
 	MsgConsole("i isn't big enough: " + i);
-
-	i => i + 1 * 4;
 }
-autrement
+sinon
 {
-	v("i was too big to begin with: " + i);
+	MsgConsole("i was too big to begin with: " + i);
 }
 
 j => i + 1;
 
-MsgConsole("i is " + i + ".");
+MsgConsole("i is " + i);
