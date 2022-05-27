@@ -10,7 +10,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
     public FrenchyVisitor()
     {
         // Set const functions and variables
-        Constants["Write"] = new Func<object?[], object?>(Write);
+        Constants["MsgConsole"] = new Func<object?[], object?>(MsgConsole);
     }
     #endregion
     private Dictionary<string, object?> Variables { get; } = new();
@@ -128,12 +128,12 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
 
         return op switch
         {
-            //"==" => IsEquals(left, right),
-            //"!=" => NotEquals(left, right),
-            //">" => GreaterThan(left, right),
+            "==" => IsEquals(left, right),
+            "!=" => NotEquals(left, right),
+            ">" => GreaterThan(left, right),
             "<" => LessThan(left, right),
-            //">=" => GreaterThanOrEqual(left, right),
-            //"<=" => LessThanOrEqual(left, right),
+            ">=" => GreaterThanOrEqual(left, right),
+            "<=" => LessThanOrEqual(left, right),
             _ => throw new NotImplementedException()
         };
     }
@@ -244,7 +244,87 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (left is float lFloat && right is int rInt)
             return lFloat < rInt;
 
-        throw new Exception($"Cannot add values of typs {left?.GetType()} and {right?.GetType()}!");
+        throw new Exception($"Cannot compare values of typs {left?.GetType()} and {right?.GetType()}!");
+    }
+    private bool GreaterThan(object? left, object? right)
+    {
+        if (left is int l && right is int r)
+            return l > r;
+
+        if (left is float lf && right is float rf)
+            return lf > rf;
+
+        if (left is int lInt && right is float rFloat)
+            return lInt > rFloat;
+
+        if (left is float lFloat && right is int rInt)
+            return lFloat > rInt;
+
+        throw new Exception($"Cannot compare values of typs {left?.GetType()} and {right?.GetType()}!");
+    }
+    private bool IsEquals(object? left, object? right)
+    {
+        if (left is int l && right is int r)
+            return l == r;
+
+        if (left is float lf && right is float rf)
+            return lf == rf;
+
+        if (left is int lInt && right is float rFloat)
+            return lInt == rFloat;
+
+        if (left is float lFloat && right is int rInt)
+            return lFloat == rInt;
+
+        throw new Exception($"Cannot compare values of typs {left?.GetType()} and {right?.GetType()}!");
+    }
+    private bool NotEquals(object? left, object? right)
+    {
+        if (left is int l && right is int r)
+            return l != r;
+
+        if (left is float lf && right is float rf)
+            return lf != rf;
+
+        if (left is int lInt && right is float rFloat)
+            return lInt != rFloat;
+
+        if (left is float lFloat && right is int rInt)
+            return lFloat != rInt;
+
+        throw new Exception($"Cannot compare values of typs {left?.GetType()} and {right?.GetType()}!");
+    }
+    private bool GreaterThanOrEqual(object? left, object? right)
+    {
+        if (left is int l && right is int r)
+            return l >= r;
+
+        if (left is float lf && right is float rf)
+            return lf >= rf;
+
+        if (left is int lInt && right is float rFloat)
+            return lInt >= rFloat;
+
+        if (left is float lFloat && right is int rInt)
+            return lFloat >= rInt;
+
+        throw new Exception($"Cannot compare values of typs {left?.GetType()} and {right?.GetType()}!");
+    }
+    private bool LessThanOrEqual(object? left, object? right)
+    {
+        if (left is int l && right is int r)
+            return l <= r;
+
+        if (left is float lf && right is float rf)
+            return lf <= rf;
+
+        if (left is int lInt && right is float rFloat)
+            return lInt <= rFloat;
+
+        if (left is float lFloat && right is int rInt)
+            return lFloat <= rInt;
+
+        throw new Exception($"Cannot compare values of typs {left?.GetType()} and {right?.GetType()}!");
     }
     #endregion
 
@@ -267,7 +347,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
     #endregion
 
     #region BASIC FUNCTIONS
-    private object? Write(object?[] args)
+    private object? MsgConsole(object?[] args)
     {
         foreach (var arg in args)
         {
@@ -276,5 +356,6 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
 
         return null;
     }
+
     #endregion
 }

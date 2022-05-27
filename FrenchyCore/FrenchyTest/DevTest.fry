@@ -5,15 +5,15 @@ s => "John";
 
 si (i < 8)
 {
-	Write("i isn't big enough: " + i);
+	MsgConsole("i isn't big enough: " + i);
 
 	i => i + 1 * 4;
 }
 autrement
 {
-	Write("i was too big to begin with: " + i);
+	v("i was too big to begin with: " + i);
 }
 
 j => i + 1;
 
-Write("i is " + i + ".");
+MsgConsole("i is " + i + ".");
