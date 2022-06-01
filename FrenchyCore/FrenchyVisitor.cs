@@ -1,6 +1,7 @@
 ﻿using Antlr4.Runtime.Misc;
 using Frenchy.FrenchyCore;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -14,6 +15,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         Constants["Pi"] = 3.14f;
         Constants["MsgConsole"] = new Func<object?[], object?>(MsgConsole);
         Constants["Pause"] = new Func<object?>(Pause);
+        Constants["Taille"] = new Func<string, int>(Size);
     }
     #endregion
     private Dictionary<string, object?> Variables { get; } = new();
@@ -104,7 +106,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
 
         if (context.listDatas() != null)
         {
-            for (int j = 0; j < context.listDatas().constant().Length; j++) // Comes back as 0 ???
+            for (int j = 0; j < context.listDatas().constant().Length; j++)
             {
                 isSameType = false;
 
@@ -145,17 +147,24 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
     public override object? VisitFunctionCall(FrenchyParser.FunctionCallContext context)
     {
         var name = context.IDENTIFIER().GetText();
-        var args = context.expression().Select(Visit).ToArray();
 
         if (!Constants.ContainsKey(name))
             throw new Exception($"La fonction {name} n'est pas définie");
 
-        if (Constants[name] is Func<object?[], object?> funcArgs)
-            return funcArgs(args);
         if (Constants[name] is Func<object?> funcBasic)
             return funcBasic();
         else
-            throw new Exception($"La variable {name} n'est pas une fonction");
+        {
+            var args = context.expression().Select(Visit).ToArray();
+            var argSolo = context.expression(0).GetText();
+
+            if (Constants[name] is Func<object?[], object?> funcArgs)
+                return funcArgs(args);
+            else if (Constants[name] is Func<string, int> funcSI)
+                return funcSI(argSolo);
+        }
+
+        throw new Exception($"La variable {name} n'est pas une fonction");
     }
     public override object? VisitWhileBlock(FrenchyParser.WhileBlockContext context)
     {
@@ -476,5 +485,18 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         return null;
     }
 
+    private int Size(string arg)
+    {
+        var length = 0;
+
+        if (Variables.ContainsKey(arg))
+        {
+            IList tempList = (IList)Variables[arg];
+
+            length = tempList.Count;
+        }
+
+        return length;
+    }
     #endregion
 }

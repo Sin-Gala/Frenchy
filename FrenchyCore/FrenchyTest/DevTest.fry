@@ -6,10 +6,10 @@ s => "John";
 a => 1;
 
 list => Liste (STRING)
-{
 	"Bonjour",
 	"Test";
-};
+
+Taille(list);
 
 pendant que (a < 8)
 {

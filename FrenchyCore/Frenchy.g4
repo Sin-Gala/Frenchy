@@ -41,7 +41,7 @@ addOp: '+' | '-';
 compareOp: '==' | '!=' | '>' | '<' | '>=' | '<=';
 boolOp: 'et' | 'ou' | 'et/ou';
 
-list: 'Liste (' dataTypes ') {' listDatas? '}';
+list: 'Liste (' dataTypes ')' listDatas? ;
 
 dataTypes: 'INTEGER' | 'FLOAT' | 'STRING' | 'BOOL';
 listDatas: constant (',' constant)*;
