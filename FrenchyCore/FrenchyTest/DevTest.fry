@@ -1,30 +1,36 @@
-﻿f => 1.2;
+﻿// Test File for the Frenchy language
+
+
+/* ------- BASE VARIABLES -------- */
+// Settings variables (float, int, bool, string)
+f => 1.2;
 i => 1;
 b => vrai;
 s => "John";
 
-a => 1;
 
-// This is a comment
 
+/* ------- LIST -------- */
+// Creating a list and filling it with elements
 list => Liste (STRING)
 	"Bonjour",
 	"Test";
 
+// Getting the list size
 taille => Taille(list);
 
-MsgConsole(taille);
-MsgConsole(Taille(list));
 
+
+/* ------- WHILE LOOP -------- */
 pendant que (a < 8)
 {
 	a => a + 3;
-
-	// This is a second comment
-
 	MsgConsole("a = " + a);
 }
 
+
+
+/* ------- IF / ELSE -------- */
 si (i < 8)
 {
 	MsgConsole("i isn't big enough: " + i);
@@ -34,18 +40,22 @@ sinon
 	MsgConsole("i was too big to begin with: " + i);
 }
 
-/* This is 
-a multi
-line comment */
 
-j => i + 1;
 
-MsgConsole("i is " + i);
-
+/* ------- FOR LOOP -------- */
 pour (h => 0, h > 5, h => h + 1)
 {
 	r => 132;
 	MsgConsole("h = " + h);
 }
 
+
+
 Pause();
+
+
+
+/* ------- BASIC FUNCTIONS -------- */
+// MsgConsole(args) -> Write a message on the console
+// Taille(list name) -> Returns the size of the list
+// Pause() -> Pause the console (litterally just calls Console.ReadKey());
