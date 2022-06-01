@@ -9,7 +9,10 @@ list => Liste (STRING)
 	"Bonjour",
 	"Test";
 
-Taille(list);
+taille => Taille(list);
+
+MsgConsole(taille);
+MsgConsole(Taille(list));
 
 pendant que (a < 8)
 {

@@ -28,6 +28,7 @@ expression
 	: constant								#constantExpression
 	| list									#listExpression
 	| IDENTIFIER							#identifierExpression
+	| functionCall							#functionCallExpression
 	| '(' expression ')'					#parenthesizedExpression
 	| '!' expression						#notExpression
 	| expression multOp expression			#multiplicativeExpression
