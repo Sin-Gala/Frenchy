@@ -13,6 +13,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         // Set const functions and variables
         Constants["Pi"] = 3.14f;
         Constants["MsgConsole"] = new Func<object?[], object?>(MsgConsole);
+        Constants["Pause"] = new Func<object?>(Pause);
     }
     #endregion
     private Dictionary<string, object?> Variables { get; } = new();
@@ -86,10 +87,12 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (!Constants.ContainsKey(name))
             throw new Exception($"La fonction {name} n'est pas définie");
 
-        if (Constants[name] is not Func<object?[], object?> func)
+        if (Constants[name] is Func<object?[], object?> funcArgs)
+            return funcArgs(args);
+        if (Constants[name] is Func<object?> funcBasic)
+            return funcBasic();
+        else
             throw new Exception($"La variable {name} n'est pas une fonction");
-
-        return func(args);
     }
     public override object? VisitWhileBlock(FrenchyParser.WhileBlockContext context)
     {
@@ -398,6 +401,13 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         {
             Console.WriteLine(arg);
         }
+
+        return null;
+    }
+
+    private object? Pause()
+    {
+        Console.ReadKey();
 
         return null;
     }
