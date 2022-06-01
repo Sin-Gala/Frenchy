@@ -37,7 +37,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         var tempVarName = context.IDENTIFIER().GetText();
         var tempValue = Visit(context.expression());
 
-        if ((tempValue is int || tempValue is float) && !Temps.ContainsKey(tempVarName))
+        if (tempValue is int || tempValue is float)
             Temps[tempVarName] = tempValue;
         else if (tempValue is not int && tempValue is not float)
             throw new Exception($"Variable {tempVarName} n'est pas un int ou un float!");
@@ -118,16 +118,16 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
 
     public override object? VisitForBlock(FrenchyParser.ForBlockContext context)
     {
-        var tempVarName = Visit(context.assignmentTemp()).ToString();
+        var tempVarName = Visit(context.assignmentTemp(0)).ToString();
 
-        if (IsFalse(Visit(context.expression(0))))
+        if (!IsTrue(Visit(context.expression())))
         {
             do
             {
-                //Visit(context.block());
-                Visit(context.expression(1));
+                Visit(context.block());
+                Visit(context.assignmentTemp(1));
             }
-            while (IsFalse(Visit(context.expression(0))));
+            while (!IsTrue(Visit(context.expression())));
         }
 
         Temps.Remove(tempVarName);

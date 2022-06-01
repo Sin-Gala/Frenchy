@@ -14,7 +14,7 @@ whileBlock: WHILE '('expression')' block;
 
 WHILE: 'pendant que' | 'jusque';
 
-forBlock: 'pour ('assignmentTemp ',' expression ',' expression ')' block;
+forBlock: 'pour ('assignmentTemp ',' expression ',' assignmentTemp ')' block;
 
 foreachBlock: 'pour chaque ('IDENTIFIER ',' STRING ', dans' constant ')';
 
