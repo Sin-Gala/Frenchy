@@ -48,7 +48,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         return tempVarName;
     }
 
-    public override object?[] VisitAssignmentTempForeach(FrenchyParser.AssignmentTempForeachContext context)
+    public override object? VisitAssignmentTempForeach(FrenchyParser.AssignmentTempForeachContext context)
     {
         var tempVarDataType = context.dataTypes().GetText();
         var tempVarName = context.IDENTIFIER().GetText();
@@ -56,11 +56,13 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (Temps.ContainsKey(tempVarName) || Constants.ContainsKey(tempVarName) || Variables.ContainsKey(tempVarName))
             throw new Exception($"La variable {tempVarName} existe déjà!");
 
-        object?[] datas = new object?[]
-        {
-            tempVarName,
-            tempVarDataType
-        };
+        //object?[] datas = new object?[]
+        //{
+        //    tempVarDataType,
+        //    tempVarName
+        //};
+
+        var datas = tempVarName;
 
         return datas;
     }
@@ -206,6 +208,69 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         }
 
         Temps.Remove(tempVarName);
+
+        return null;
+    }
+    public override object? VisitForeachBlock(FrenchyParser.ForeachBlockContext context)
+    {
+        //TODO: Rework logic and clean code
+
+        var datas = Visit(context.assignmentTempForeach());
+
+        var lengthList = 0;
+        var currentIndex = 0;
+        IList tempList = null;
+        var listIdentifier = context.IDENTIFIER().GetText();
+        var dataType = context.assignmentTempForeach().dataTypes().GetText();
+
+        //TODO: Need to verify that the data type of the datas is the same as the list one
+
+        if (Variables.ContainsKey(listIdentifier))
+        {
+            tempList = (IList)Variables[listIdentifier];
+            lengthList = tempList.Count;
+        }
+        else if (Constants.ContainsKey(listIdentifier))
+        {
+            tempList = (IList)Constants[listIdentifier];
+            lengthList = tempList.Count;
+        }
+
+        do
+        {
+            switch (dataType)
+            {
+                case "INTEGER":
+                    Temps.Add(datas.ToString(), (int)tempList[currentIndex]);
+                    break;
+                case "FLOAT":
+                    Temps.Add(datas.ToString(), (float)tempList[currentIndex]);
+                    break;
+                case "STRING":
+                    Temps.Add(datas.ToString(), (string)tempList[currentIndex]);
+                    break;
+                case "BOOL":
+                    Temps.Add(datas.ToString(), (bool)tempList[currentIndex]);
+                    break;
+                default:
+                    throw new Exception("Type non valide");
+            }
+
+            Visit(context.block());
+
+            tempList[currentIndex] = Temps[datas.ToString()];
+            Temps.Remove(datas.ToString());
+        }
+        while (currentIndex < lengthList);
+
+        if (Variables.ContainsKey(listIdentifier))
+        {
+            Variables[listIdentifier] = tempList;
+        }
+        else if (Constants.ContainsKey(listIdentifier))
+        {
+            Constants[listIdentifier] = tempList;
+        }
 
         return null;
     }
@@ -489,6 +554,12 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         if (Variables.ContainsKey(arg))
         {
             IList tempList = (IList)Variables[arg];
+
+            length = tempList.Count;
+        }
+        else if (Constants.ContainsKey(arg))
+        {
+            IList tempList = (IList)Constants[arg];
 
             length = tempList.Count;
         }

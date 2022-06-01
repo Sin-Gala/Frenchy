@@ -16,7 +16,7 @@ WHILE: 'pendant que' | 'jusque';
 
 forBlock: 'pour ('assignmentTemp ',' expression ',' assignmentTemp ')' block;
 
-foreachBlock: 'pour chaque ('assignmentTempForeach ', dans' list')';
+foreachBlock: 'pour chaque ('assignmentTempForeach ', dans' IDENTIFIER')' block;
 
 assignment: IDENTIFIER '=>' expression;
 assignmentTemp: IDENTIFIER '=>' expression;
@@ -58,5 +58,4 @@ block: '{' line* '}';
 
 WS: [ \t\r\n]+ -> skip; 
 IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
-SIMPLE_COMMENT: '//' ~[\r\n]* -> skip;
-COMPLEX_COMMENT: '/*' ~[\r\n]* '*/' -> skip;
+SIMPLE_COMMENT: '//' [a-zA-Z0-9_]* ~[\r\n]* -> skip;
