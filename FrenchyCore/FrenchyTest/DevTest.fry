@@ -8,7 +8,7 @@ i => 1;
 b => vrai;
 s => "John";
 
-
+a => 0;
 
 /* ------- LIST -------- */
 // Creating a list and filling it with elements
@@ -48,6 +48,13 @@ pour (h => 0, h > 5, h => h + 1)
 	r => 132;
 	MsgConsole("h = " + h);
 }
+
+
+
+/* ------- FOREACH LOOP -------- */
+//pour chaque (dataType, IDENTIFIER, dans list)
+//{};
+
 
 
 
