@@ -58,3 +58,5 @@ block: '{' line* '}';
 
 WS: [ \t\r\n]+ -> skip; 
 IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
+SIMPLE_COMMENT: '//' ~[\r\n]* -> skip;
+COMPLEX_COMMENT: '/*' ~[\r\n]* '*/' -> skip;

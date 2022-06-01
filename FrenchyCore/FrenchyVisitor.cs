@@ -451,9 +451,6 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
     #region FUNCTION CALLS
     #endregion
 
-    #region COMMENTS
-    #endregion
-
     #region HELPERS
     private bool IsTrue(object? value)
     {

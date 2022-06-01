@@ -5,6 +5,8 @@ s => "John";
 
 a => 1;
 
+// This is a comment
+
 list => Liste (STRING)
 	"Bonjour",
 	"Test";
@@ -17,6 +19,9 @@ MsgConsole(Taille(list));
 pendant que (a < 8)
 {
 	a => a + 3;
+
+	// This is a second comment
+
 	MsgConsole("a = " + a);
 }
 
@@ -28,6 +33,10 @@ sinon
 {
 	MsgConsole("i was too big to begin with: " + i);
 }
+
+/* This is 
+a multi
+line comment */
 
 j => i + 1;
 
