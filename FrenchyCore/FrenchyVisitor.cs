@@ -46,6 +46,23 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         return tempVarName;
     }
 
+    //public override object?[] VisitAssignmentTempForeach(FrenchyParser.AssignmentTempForeachContext context)
+    //{
+    //    var tempVarDataType = context.dataTypes().GetText();
+    //    var tempVarName = context.IDENTIFIER().GetText();
+
+    //    if (Temps.ContainsKey(tempVarName) || Constants.ContainsKey(tempVarName) || Variables.ContainsKey(tempVarName))
+    //        throw new Exception($"La variable {tempVarName} existe déjà!");
+
+    //    object?[] datas = new object?[]
+    //    {
+    //        tempVarName,
+    //        tempVarDataType
+    //    };
+
+    //    return datas;
+    //}
+
     public override object? VisitConstant(FrenchyParser.ConstantContext context)
     {
         if (context.INTEGER() is { } i)
@@ -78,6 +95,62 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
 
         throw new Exception($"La variable {varName} n'est pas définie");
     }
+    //public override object? VisitList(FrenchyParser.ListContext context)
+    //{
+    //    var type = context.dataTypes().GetText();
+    //    List<object?> listFinal = new List<object?>();
+    //    bool isSameType = false;
+
+    //    object? datas = Visit(context.listDatas());
+
+    //    for (int j = 0; j < datas.Length; j++) // Comes back as 0 ???
+    //    {
+    //        isSameType = false;
+
+    //        switch (type)
+    //        {
+    //            case "INTEGER":
+    //                if (context.listDatas()[j].constant().INTEGER() is not { } i)
+    //                    isSameType = false;
+    //                break;
+    //            case "FLOAT":
+    //                if (context.listDatas()[j].constant().FLOAT() is not { } f)
+    //                    isSameType = false;
+    //                break;
+    //            case "STRING":
+    //                if (context.listDatas()[j].constant().STRING() is not { } s)
+    //                    isSameType = false;
+    //                break;
+    //            case "BOOL":
+    //                if (context.listDatas()[j].constant().BOOL() is not { } b)
+    //                    isSameType = false;
+    //                break;
+    //            default:
+    //                isSameType = false;
+    //                break;
+    //        }
+
+    //        if (!isSameType)
+    //            throw new Exception($"Valeur {j} ({context.listDatas()[j].GetText()}) is not a {type} !");
+
+    //        listFinal.Add(context.listDatas()[j]);
+    //    }
+
+    //    return listFinal;
+    //}
+
+    //public override object? VisitListDatas(FrenchyParser.ListDatasContext context)
+    //{
+    //    List<object?> list = new List<object?>();
+
+    //    for (int i = 0; i < context.constant().Length; i++)
+    //    {
+    //        list.Add(Visit(context.constant()[i]));
+    //    }
+
+    //    return list;
+    //}
+
 
     public override object? VisitFunctionCall(FrenchyParser.FunctionCallContext context)
     {
@@ -376,7 +449,13 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
     }
     #endregion
 
-    #region BASIC LOOPS
+    #region FUNCTION CALLS
+    #endregion
+
+    #region COMMENTS
+    #endregion
+
+    #region HELPERS
     private bool IsTrue(object? value)
     {
         if (value is bool b)
@@ -386,12 +465,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
     }
 
     public bool IsFalse(object? value) => !IsTrue(value);
-    #endregion
 
-    #region FUNCTION CALLS
-    #endregion
-
-    #region COMMENTS
     #endregion
 
     #region BASIC FUNCTIONS

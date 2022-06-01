@@ -16,15 +16,17 @@ WHILE: 'pendant que' | 'jusque';
 
 forBlock: 'pour ('assignmentTemp ',' expression ',' assignmentTemp ')' block;
 
-foreachBlock: 'pour chaque ('IDENTIFIER ',' STRING ', dans' constant ')';
+foreachBlock: 'pour chaque ('assignmentTempForeach ', dans' list')';
 
 assignment: IDENTIFIER '=>' expression;
 assignmentTemp: IDENTIFIER '=>' expression;
+assignmentTempForeach: dataTypes ',' IDENTIFIER;
 
 functionCall: IDENTIFIER '(' (expression (',' expression)*)? ')';
 
 expression
 	: constant								#constantExpression
+	| list									#listExpression
 	| IDENTIFIER							#identifierExpression
 	| '(' expression ')'					#parenthesizedExpression
 	| '!' expression						#notExpression
@@ -38,6 +40,11 @@ multOp: '*' | '/' | '%';
 addOp: '+' | '-';
 compareOp: '==' | '!=' | '>' | '<' | '>=' | '<=';
 boolOp: 'et' | 'ou' | 'et/ou';
+
+list: 'Liste <' dataTypes '> {' listDatas '}';
+listDatas: constant*;
+
+dataTypes: 'INTEGER' | 'FLOAT' | 'STRING' | 'BOOL';
 
 constant: INTEGER | FLOAT | STRING | BOOL | NULL;
 INTEGER: [0-9]+;
