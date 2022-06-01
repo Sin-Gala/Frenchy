@@ -10,7 +10,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
     #region CONSTRUCTOR
     public FrenchyVisitor()
     {
-        // Set const functions and variables
+       //Set const functions and variables
         Constants["Pi"] = 3.14f;
         Constants["MsgConsole"] = new Func<object?[], object?>(MsgConsole);
         Constants["Pause"] = new Func<object?>(Pause);
@@ -46,22 +46,22 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         return tempVarName;
     }
 
-    //public override object?[] VisitAssignmentTempForeach(FrenchyParser.AssignmentTempForeachContext context)
-    //{
-    //    var tempVarDataType = context.dataTypes().GetText();
-    //    var tempVarName = context.IDENTIFIER().GetText();
+    public override object?[] VisitAssignmentTempForeach(FrenchyParser.AssignmentTempForeachContext context)
+    {
+        var tempVarDataType = context.dataTypes().GetText();
+        var tempVarName = context.IDENTIFIER().GetText();
 
-    //    if (Temps.ContainsKey(tempVarName) || Constants.ContainsKey(tempVarName) || Variables.ContainsKey(tempVarName))
-    //        throw new Exception($"La variable {tempVarName} existe déjà!");
+        if (Temps.ContainsKey(tempVarName) || Constants.ContainsKey(tempVarName) || Variables.ContainsKey(tempVarName))
+            throw new Exception($"La variable {tempVarName} existe déjà!");
 
-    //    object?[] datas = new object?[]
-    //    {
-    //        tempVarName,
-    //        tempVarDataType
-    //    };
+        object?[] datas = new object?[]
+        {
+            tempVarName,
+            tempVarDataType
+        };
 
-    //    return datas;
-    //}
+        return datas;
+    }
 
     public override object? VisitConstant(FrenchyParser.ConstantContext context)
     {
@@ -95,61 +95,51 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
 
         throw new Exception($"La variable {varName} n'est pas définie");
     }
-    //public override object? VisitList(FrenchyParser.ListContext context)
-    //{
-    //    var type = context.dataTypes().GetText();
-    //    List<object?> listFinal = new List<object?>();
-    //    bool isSameType = false;
+    public override object? VisitList(FrenchyParser.ListContext context)
+    {
+        var type = context.dataTypes().GetText();
+        bool isSameType = false;
 
-    //    object? datas = Visit(context.listDatas());
+        var listFinal = new List<object?>();
 
-    //    for (int j = 0; j < datas.Length; j++) // Comes back as 0 ???
-    //    {
-    //        isSameType = false;
+        if (context.listDatas() != null)
+        {
+            for (int j = 0; j < context.listDatas().constant().Length; j++) // Comes back as 0 ???
+            {
+                isSameType = false;
 
-    //        switch (type)
-    //        {
-    //            case "INTEGER":
-    //                if (context.listDatas()[j].constant().INTEGER() is not { } i)
-    //                    isSameType = false;
-    //                break;
-    //            case "FLOAT":
-    //                if (context.listDatas()[j].constant().FLOAT() is not { } f)
-    //                    isSameType = false;
-    //                break;
-    //            case "STRING":
-    //                if (context.listDatas()[j].constant().STRING() is not { } s)
-    //                    isSameType = false;
-    //                break;
-    //            case "BOOL":
-    //                if (context.listDatas()[j].constant().BOOL() is not { } b)
-    //                    isSameType = false;
-    //                break;
-    //            default:
-    //                isSameType = false;
-    //                break;
-    //        }
+                switch (type)
+                {
+                    case "INTEGER":
+                        if (Visit(context.listDatas().constant()[j]) is int i)
+                            isSameType = true;
+                        break;
+                    case "FLOAT":
+                        if (Visit(context.listDatas().constant()[j]) is float f)
+                            isSameType = true;
+                        break;
+                    case "STRING":
+                        if (Visit(context.listDatas().constant()[j]) is string s)
+                            isSameType = true;
+                        break;
+                    case "BOOL":
+                        if (Visit(context.listDatas().constant()[j]) is bool b)
+                            isSameType = true;
+                        break;
+                    default:
+                        isSameType = false;
+                        break;
+                }
 
-    //        if (!isSameType)
-    //            throw new Exception($"Valeur {j} ({context.listDatas()[j].GetText()}) is not a {type} !");
+                if (!isSameType)
+                    throw new Exception($"Valeur {j} ({context.listDatas().constant()[j].GetText()}) is not a {type} !");
 
-    //        listFinal.Add(context.listDatas()[j]);
-    //    }
+                listFinal.Add(context.listDatas().constant()[j]);
+            }
+        }
 
-    //    return listFinal;
-    //}
-
-    //public override object? VisitListDatas(FrenchyParser.ListDatasContext context)
-    //{
-    //    List<object?> list = new List<object?>();
-
-    //    for (int i = 0; i < context.constant().Length; i++)
-    //    {
-    //        list.Add(Visit(context.constant()[i]));
-    //    }
-
-    //    return list;
-    //}
+        return listFinal;
+    }
 
 
     public override object? VisitFunctionCall(FrenchyParser.FunctionCallContext context)

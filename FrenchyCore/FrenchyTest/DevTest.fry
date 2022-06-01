@@ -5,6 +5,12 @@ s => "John";
 
 a => 1;
 
+list => Liste (STRING)
+{
+	"Bonjour",
+	"Test";
+};
+
 pendant que (a < 8)
 {
 	a => a + 3;

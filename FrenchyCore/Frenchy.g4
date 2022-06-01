@@ -41,10 +41,10 @@ addOp: '+' | '-';
 compareOp: '==' | '!=' | '>' | '<' | '>=' | '<=';
 boolOp: 'et' | 'ou' | 'et/ou';
 
-list: 'Liste <' dataTypes '> {' listDatas '}';
-listDatas: constant*;
+list: 'Liste (' dataTypes ') {' listDatas? '}';
 
 dataTypes: 'INTEGER' | 'FLOAT' | 'STRING' | 'BOOL';
+listDatas: constant (',' constant)*;
 
 constant: INTEGER | FLOAT | STRING | BOOL | NULL;
 INTEGER: [0-9]+;
