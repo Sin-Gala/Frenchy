@@ -18,6 +18,7 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         Constants["Taille"] = new Func<string, int>(Size);
     }
     #endregion
+    private Dictionary<string, object?> Funtions { get; } = new();
     private Dictionary<string, object?> Variables { get; } = new();
     private Dictionary<string, object?> Constants { get; } = new();
     private Dictionary<string, object?> Temps { get; } = new();
@@ -47,7 +48,6 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
 
         return tempVarName;
     }
-
     public override object? VisitAssignmentTempForeach(FrenchyParser.AssignmentTempForeachContext context)
     {
         var tempVarDataType = context.dataTypes().GetText();
@@ -65,6 +65,21 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
         var datas = tempVarName;
 
         return datas;
+    }
+
+    public override object? VisitFunction(FrenchyParser.FunctionContext context)
+    {
+        var funcName = context.IDENTIFIER().GetText();
+        var args = context.funcArgs().IDENTIFIER().Select(Visit).ToArray();
+        var block = context.block();
+
+        if (Funtions.ContainsKey(funcName) || Constants.ContainsKey(funcName) || Variables.ContainsKey(funcName))
+            throw new Exception($"The function {funcName} already exists!");
+
+        // TODO: figure out how to have the user be able to reference back to this created function in their code
+
+
+        return null;
     }
 
     public override object? VisitConstant(FrenchyParser.ConstantContext context)
@@ -511,9 +526,6 @@ public class FrenchyVisitor : FrenchyBaseVisitor<object?>
 
         throw new Exception($"Impossible de comparer des objets de type {left?.GetType()} et {right?.GetType()}!");
     }
-    #endregion
-
-    #region FUNCTION CALLS
     #endregion
 
     #region HELPERS

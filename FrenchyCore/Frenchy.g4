@@ -23,6 +23,8 @@ assignmentTemp: IDENTIFIER '=>' expression;
 assignmentTempForeach: dataTypes ',' IDENTIFIER;
 
 functionCall: IDENTIFIER '(' (expression (',' expression)*)? ')';
+function: 'fonction' IDENTIFIER '(' funcArgs ')' block;
+funcArgs: (IDENTIFIER (',' IDENTIFIER)*)?;
 
 expression
 	: constant								#constantExpression
@@ -43,9 +45,9 @@ compareOp: '==' | '!=' | '>' | '<' | '>=' | '<=';
 boolOp: 'et' | 'ou' | 'et/ou';
 
 list: 'Liste (' dataTypes ')' listDatas? ;
+listDatas: constant (',' constant)*;
 
 dataTypes: 'INTEGER' | 'FLOAT' | 'STRING' | 'BOOL';
-listDatas: constant (',' constant)*;
 
 constant: INTEGER | FLOAT | STRING | BOOL | NULL;
 INTEGER: [0-9]+;
@@ -56,6 +58,7 @@ NULL: 'VIDE';
 
 block: '{' line* '}';
 
-WS: [ \t\r\n]+ -> skip; 
+WS: [\t\r\n]+ -> skip; 
 IDENTIFIER: [a-zA-Z_][a-zA-Z0-9_]*;
+
 SIMPLE_COMMENT: '//' [a-zA-Z0-9_]* ~[\r\n]* -> skip;

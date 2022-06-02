@@ -52,7 +52,7 @@ pour (h => 0, h > 5, h => h + 1)
 
 
 // ------- FOREACH LOOP -------- 
-//pour chaque (STRING, test, dans list)
+//pour chaque (INTEGER, test, dans list)
 //{
 //	MsgConsole(test);
 //};
